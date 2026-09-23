@@ -1,34 +1,156 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" >
-    <title>Document</title>
-</head>
-<body>
-    {{ productos }}
-   <table class="table table-bordered table-striped">
-      <thead>
-        <tr>
-            <th>Codigo</th>
-            <th>Nombre</th>
-            <th>Precio</th>
-            <th>Categoria</th>
-        </tr>
-      </thead>
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de Productos</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+    <style>
+      body {
+        background-color: #f4f6f9;
+      }
+      .navbar-dark-custom {
+        background-color: #1c1f26;
+      }
+      .badge-categoria {
+        background-color: #17a2b8;
+        font-weight: 500;
+      }
+    </style>
+  </head>
 
-      <tbody>
-        {% for producto in productos %}
-        <tr>
-           <td>{{ producto.codigo }}</td>
-           <td>{{ producto.nombre }}</td>
-           <td>{{ producto.precio }}</td>
-           <td>{{ producto.categoria }}</td>
-        </tr>   
-        {% endfor %}
+  <body>
+    <!-- Barra superior -->
+    <nav class="navbar navbar-dark-custom mb-4">
+      <div class="container">
+        <span class="navbar-brand mb-0 h1 text-white">🛒 TechStore</span>
+      </div>
+    </nav>
 
-      </tbody>
-   </table>
-</body>
-</html> 
+    <div class="container">
+      <div class="card shadow-sm">
+        <!-- Encabezado -->
+        <div
+          class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+        >
+          <h3 class="mb-0">Gestión de Productos</h3>
+          <span class="badge bg-warning text-dark"
+            >Total: {{ productos|length }}</span
+          >
+        </div>
+
+        <!-- Contenido -->
+        <div class="card-body">
+          <div class="mb-3">
+            <a href="/registro_producto" class="btn btn-success"
+              >+ Registrar Producto</a
+            >
+            <a href="/reporte_productos" class="btn btn-secondary">
+              <i class="bi bi-file-earmark-pdf"></i>
+              Reporte
+            </a>
+          </div>
+
+          <table class="table table-striped table-bordered align-middle">
+            <thead class="table-dark">
+              <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Imagen</th>
+                <th class="text-end">Precio</th>
+                <th>Categoría</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for producto in productos %}
+              <tr>
+                <td>{{ producto.codigo }}</td>
+                <td>{{ producto.nombre }}</td>
+                <td>
+                  <img
+                    src="{{ url_for('static', filename='img_productos/' + producto.imagen) if producto.imagen else 'https://placehold.co/60x60/orange/white?text=N/A' }}"
+                    alt="{{ producto.nombre }}"
+                    style="
+                      width: 60px;
+                      height: 60px;
+                      object-fit: cover;
+                      border-radius: 4px;
+                    "
+                  />
+                </td>
+                <td class="text-end">
+                  $ {{ "{:,.2f}".format(producto.precio) }}
+                </td>
+                <td>
+                  <span class="badge badge-categoria"
+                    >{{ producto.categoria }}</span
+                  >
+                </td>
+                <td class="text-center">
+                  <a
+                    class="btn btn-warning btn-sm"
+                    href="/editar_producto/{{producto.codigo}}"
+                    >Editar</a
+                  >
+                  <a
+                    class="btn btn-danger btn-sm btn-eliminar"
+                    data-url="/eliminar_producto/{{producto.codigo}}"
+                    >Eliminar</a
+                  >
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const botonesEliminar = document.querySelectorAll(".btn-eliminar");
+        botonesEliminar.forEach(function (boton) {
+          boton.addEventListener("click", function (e) {
+            e.preventDefault();
+            const url = this.dataset.url;
+            Swal.fire({
+              title: "¿Está seguro?",
+              text: "Esta acción eliminará el producto de forma permanente.",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#d33",
+              cancelButtonColor: "#6c757d",
+              confirmButtonText: "Sí, eliminar",
+              cancelButtonText: "Cancelar",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.href = url;
+              }
+            });
+          });
+        });
+      });
+    </script>
+    {% with mensajes = get_flashed_messages(with_categories=true) %} {% if
+    mensajes %} {% for categoria, mensaje in mensajes %}
+
+    <script>
+      Swal.fire({
+        icon: "{{ categoria}}",
+        title: "{{ mensaje }}",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    </script>
+
+    {% endfor%} {% endif %} {% endwith %}
+  </body>
+</html>

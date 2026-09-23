@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Mi cuenta</title>
+
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+
+    <style>
+      body {
+        background-color: #f5f6fa;
+        font-family: Arial, sans-serif;
+      }
+
+      /* NAVBAR */
+      .navbar-custom {
+        background-color: #0d6efd;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+      }
+
+      .navbar-brand {
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+
+      /* CONTENEDOR */
+      .dashboard-container {
+        max-width: 1050px;
+        margin: 35px auto;
+      }
+
+      /* BIENVENIDA */
+      .welcome-card {
+        background: #0d6efd;
+        color: white;
+        border-radius: 12px;
+        padding: 25px 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
+      }
+
+      .welcome-card h2 {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .welcome-card p {
+        opacity: 0.95;
+      }
+
+      /* TARJETAS */
+      .profile-card {
+        background: white;
+        border-radius: 12px;
+        padding: 28px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+        height: 100%;
+      }
+
+      .profile-card h4 {
+        font-weight: 600;
+        color: #343a40;
+      }
+
+      /* ICONO PERFIL */
+      .profile-icon {
+        width: 85px;
+        height: 85px;
+        border-radius: 50%;
+        background-color: #e7f1ff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        font-size: 42px;
+        color: #0d6efd;
+      }
+
+      /* INPUTS */
+      .form-label {
+        font-weight: 500;
+        color: #495057;
+        margin-bottom: 7px;
+      }
+
+      .form-control {
+        border-radius: 8px;
+        padding: 11px 13px;
+        border: 1px solid #dee2e6;
+        background-color: #fff;
+        transition: 0.2s;
+      }
+
+      .form-control:focus {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.15);
+      }
+
+      .form-control[readonly] {
+        background-color: #f1f3f5;
+      }
+
+      /* CONTRASEÑA */
+      .password-container {
+        position: relative;
+      }
+
+      .password-container .password-icon {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #6c757d;
+        z-index: 5;
+      }
+
+      .password-container .form-control {
+        padding-right: 45px;
+      }
+
+      /* BOTONES */
+      .btn {
+        border-radius: 8px;
+        font-weight: 500;
+        transition: 0.2s;
+      }
+
+      .btn-primary {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+      }
+
+      .btn-primary:hover {
+        background-color: #0b5ed7;
+        border-color: #0a58ca;
+        transform: translateY(-1px);
+      }
+
+      /* BADGE */
+      .badge {
+        padding: 8px 12px;
+        border-radius: 20px;
+      }
+
+      /* SEPARADORES */
+      hr {
+        border-color: #e9ecef;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- =========================
+     NAVBAR
+========================= -->
+
+    <nav class="navbar navbar-dark navbar-custom">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="/"> Mi Tienda </a>
+
+        <div class="d-flex align-items-center gap-3">
+          <span class="text-white">
+            <i class="bi bi-person-circle"></i>
+            {{ usuario.nombre }}
+          </span>
+
+          <a href="{{ url_for('logout') }}" class="btn btn-light btn-sm">
+            <i class="bi bi-box-arrow-right"></i>
+            Cerrar sesión
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- =========================
+     DASHBOARD
+========================= -->
+
+    <div class="container dashboard-container">
+      <!-- Bienvenida -->
+
+      <div class="welcome-card">
+        <h2>
+          <i class="bi bi-person-circle"></i>
+          ¡Hola, {{ usuario.nombre }}!
+        </h2>
+
+        <p class="mb-0">
+          Bienvenido a tu cuenta. Desde aquí puedes consultar y actualizar tus
+          datos personales.
+        </p>
+      </div>
+
+      <div class="row g-4">
+        <!-- Información del usuario -->
+
+        <div class="col-md-4">
+          <div class="profile-card text-center">
+            <div class="profile-icon">
+              <i class="bi bi-person"></i>
+            </div>
+
+            <h4>{{ usuario.nombre }}</h4>
+
+            <p class="text-muted mb-2">{{ usuario.correo }}</p>
+
+            <span class="badge bg-primary"> {{ usuario.rol }} </span>
+
+            <hr />
+
+            <p class="text-muted small">
+              <i class="bi bi-check-circle text-success"></i>
+              Cuenta activa
+            </p>
+          </div>
+        </div>
+
+        <!-- Formulario actualizar datos -->
+
+        <div class="col-md-8">
+          <div class="profile-card">
+            <h4 class="mb-4">
+              <i class="bi bi-pencil-square"></i>
+              Actualizar mis datos
+            </h4>
+
+            <form action="{{ url_for('actualizar_perfil') }}" method="POST">
+              <!-- Nombre -->
+
+              <div class="mb-3">
+                <label class="form-label"> Nombre completo </label>
+
+                <input
+                  type="text"
+                  class="form-control"
+                  name="nombre"
+                  value="{{ usuario.nombre }}"
+                  required
+                />
+              </div>
+
+              <!-- Correo -->
+
+              <div class="mb-3">
+                <label class="form-label"> Correo </label>
+
+                <input
+                  type="email"
+                  class="form-control"
+                  name="correo"
+                  value="{{ usuario.correo }}"
+                  readonly
+                />
+
+                <div class="form-text">El correo no se puede modificar.</div>
+              </div>
+
+              <!-- Teléfono -->
+
+              <div class="mb-3">
+                <label class="form-label"> Teléfono </label>
+
+                <input
+                  type="text"
+                  class="form-control"
+                  name="telefono"
+                  value="{{ usuario.telefono }}"
+                  required
+                />
+              </div>
+
+              <hr class="my-4" />
+
+              <h6 class="mb-3">Cambiar contraseña</h6>
+
+              <!-- Nueva contraseña -->
+
+              <div class="mb-3">
+                <label class="form-label"> Nueva contraseña </label>
+
+                <input
+                  type="password"
+                  class="form-control"
+                  name="password"
+                  placeholder="Dejar vacío si no desea cambiarla"
+                />
+              </div>
+
+              <!-- Confirmar contraseña -->
+
+              <div class="mb-4">
+                <label class="form-label"> Confirmar nueva contraseña </label>
+
+                <input
+                  type="password"
+                  class="form-control"
+                  name="confirmPassword"
+                  placeholder="Repita la nueva contraseña"
+                />
+              </div>
+
+              <!-- Botón -->
+
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-save"></i>
+                Guardar cambios
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
