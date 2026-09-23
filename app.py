@@ -50,6 +50,12 @@ def inicio():
 @app.route("/productos")
 def productos():
 
+    if "usuario" not in session:
+        return redirect(url_for("inicio"))
+
+    if session.get("rol") != "Administrador":
+        return redirect(url_for("inicio"))
+
     conexion = obtener_conexion()
 
     cursor = conexion.cursor(dictionary=True)
